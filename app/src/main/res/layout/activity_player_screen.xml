@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@drawable/psbg"
     android:layout_height="match_parent"
     tools:context=".PlayerScreen">
-
+    <!---->
     <SeekBar
         android:id="@+id/songBar"
         android:layout_width="367dp"
@@ -19,18 +20,20 @@
 
     <Button
         android:id="@+id/pausebutton"
-        android:layout_width="71dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="161dp"
-        android:layout_marginTop="67dp"
-        android:layout_marginEnd="161dp"
-        android:layout_marginBottom="75dp"
+        android:layout_width="97dp"
+        android:layout_height="71dp"
+        android:layout_marginStart="134dp"
+        android:layout_marginEnd="134dp"
+        android:layout_marginBottom="88dp"
+        android:background="@android:drawable/ic_media_pause"
+        android:backgroundTint="@color/material_dynamic_neutral95"
+        android:foregroundGravity="center"
         android:onClick="pauseAndStart"
-        android:text="img"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.717"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/songBar" />
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/songName"
@@ -41,12 +44,52 @@
         android:layout_marginEnd="14dp"
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
-        android:scrollHorizontally="true"
         android:paddingLeft="5dp"
-        android:text=" Name of Song usdfdfndf fdfvfdfvdd fdfdrsesf dsdfsdfefs"
+        android:scrollHorizontally="true"
         android:singleLine="true"
+        android:text=" Name of Song usdfdfndf fdfvfdfvdd fdfdrsesf dsdfsdfefs"
+        android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="312dp"
+        android:layout_height="355dp"
+        android:layout_marginTop="132dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="95dp"
+        app:layout_constraintBottom_toTopOf="@+id/songBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/songName"
+        app:srcCompat="@drawable/icon" />
+
+    <TextView
+        android:id="@+id/currentTime"
+        android:layout_width="46dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="18dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        android:singleLine="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/songBar" />
+
+    <TextView
+        android:id="@+id/endingTime"
+        android:layout_width="46dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="28dp"
+        android:text="TextView"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/songBar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
