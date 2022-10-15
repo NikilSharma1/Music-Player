@@ -68,8 +68,8 @@ public class Activity2 extends AppCompatActivity {
         listView = findViewById(R.id.musicview);
 
         getAudio();
-        MusicAdapter adapter = new MusicAdapter(this, MediaPlayerChecker.songList);
-        listView.setAdapter(adapter);
+        MediaPlayerChecker.adapter = new MusicAdapter(this, MediaPlayerChecker.songList);
+        listView.setAdapter(MediaPlayerChecker.adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -104,7 +104,7 @@ public class Activity2 extends AppCompatActivity {
                     //adapter.notifyDataSetChanged();
                 }
 
-                adapter.notifyDataSetChanged();
+                MediaPlayerChecker.adapter.notifyDataSetChanged();
             }
         });
     }

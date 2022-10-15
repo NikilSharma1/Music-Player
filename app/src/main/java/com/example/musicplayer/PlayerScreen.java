@@ -43,6 +43,19 @@ public class PlayerScreen extends AppCompatActivity {
             MediaPlayerChecker.mediaPlayer.start();
         }
     }
+    public void songDetailsfornextSong(){
+        pathofSong = MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).getMpath();
+        nameofSong = MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).getMnameofSong();
+        songName.setText(nameofSong);
+    }
+    public void nextSong(View view){
+        MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).mstateofSong = false;
+        MediaPlayerChecker.Pos+=1;
+        MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).mstateofSong =true;
+        MediaPlayerChecker.adapter.notifyDataSetChanged();
+        songDetailsfornextSong();
+        newSongisPlayed();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,23 +71,25 @@ public class PlayerScreen extends AppCompatActivity {
         //IT WILL LOAD UP INFO REGARDING THE SONG IN RESP. VARIABLES
         boolean statusofSong=getIntent().getBooleanExtra("Status",false);
         if(statusofSong){
-            songDetails();
-            setDurationBar();
-            MediaPlayerChecker.mediaPlayer.start();
+           SongIsAlreadyPlaying();
         }
         else{
             songDetails();
-
-            //IT WILL SET THE MEDIA PLAYER WITH PARTICULAR SONG ATTRIBUTES
-            setUpMediaPlayer();
-
-
-            setDurationBar();
-
-
-            MediaPlayerChecker.mediaPlayer.start();
-            MediaPlayerChecker.mediaPlayer.setLooping(true);
+            newSongisPlayed();
         }
+    }
+    public void SongIsAlreadyPlaying(){
+        songDetails();
+        setDurationBar();
+        MediaPlayerChecker.mediaPlayer.start();
+        MediaPlayerChecker.mediaPlayer.setLooping(true);
+    }
+    public void newSongisPlayed(){
+        //IT WILL SET THE MEDIA PLAYER WITH PARTICULAR SONG ATTRIBUTES
+        setUpMediaPlayer();
+        setDurationBar();
+        MediaPlayerChecker.mediaPlayer.start();
+        MediaPlayerChecker.mediaPlayer.setLooping(true);
     }
     public void songDetails(){
         pathofSong = getIntent().getStringExtra("Path");

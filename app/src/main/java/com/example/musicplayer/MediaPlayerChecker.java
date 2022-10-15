@@ -8,4 +8,5 @@ public class MediaPlayerChecker {
     public static MediaPlayer mediaPlayer;
     public static Integer Pos;
     public static ArrayList<Song> songList;
+    public static MusicAdapter adapter;
 }
