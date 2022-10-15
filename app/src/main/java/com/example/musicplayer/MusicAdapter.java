@@ -1,6 +1,7 @@
 package com.example.musicplayer;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,10 @@ import java.util.Date;
 import java.util.List;
 
 public class MusicAdapter extends ArrayAdapter {
-
+    static class ViewHolder {
+        protected TextView text1;
+        protected TextView text2;
+    }
 
     public MusicAdapter(@NonNull Context context, List<Song> songList) {
         super(context, 0, songList);
@@ -26,19 +30,34 @@ public class MusicAdapter extends ArrayAdapter {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View listitemview = convertView;
-        if (listitemview == null) {
-            listitemview = LayoutInflater.from(getContext()).inflate(R.layout.musicadapter, parent, false);
+
+        ViewHolder viewHolder = null;
+        if(convertView == null){
+
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.musicadapter, parent, false);
+
+            viewHolder = new ViewHolder();
+            viewHolder.text1 = (TextView) convertView.findViewById(R.id.name);
+            viewHolder.text2 = (TextView) convertView.findViewById(R.id.source);
+
+            convertView.setTag(viewHolder);
+
+        }
+        else{
+            viewHolder = (ViewHolder) convertView.getTag();
         }
         Song currentSong = (Song) getItem(position);
+        viewHolder.text1.setText(currentSong.getMnameofSong());
+        viewHolder.text2.setText(currentSong.getMsrcofSong());
 
-        TextView nameview = (TextView) listitemview.findViewById(R.id.name);
-        String name= currentSong.getMnameofSong();
-        nameview.setText(name);
+        if (MediaPlayerChecker.songList.get(position).mstateofSong) {
+            viewHolder.text1.setTextColor(Color.BLUE);
 
-        TextView sourceview = (TextView) listitemview.findViewById(R.id.source);
-        String source=currentSong.getMsrcofSong();
-        sourceview.setText(source);
-        return listitemview;
+        } else {
+            viewHolder.text1.setTextColor(Color.BLACK);
+        }
+
+        viewHolder.text2.setTextColor(Color.BLACK);
+        return convertView;
     }
 }

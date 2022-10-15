@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.Window;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity {
     private static int TIME_OUT = 1500;
@@ -27,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         MediaPlayerChecker.mediaPlayer = new MediaPlayer();
+        MediaPlayerChecker.songList = new ArrayList<>();
+        MediaPlayerChecker.Pos=0;
         /*toolbar=findViewById(R.id.toobar);
         setSupportActionBar(toolbar);*/
         final View myLayout = findViewById(R.id.startscreen);

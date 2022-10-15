@@ -22,6 +22,13 @@ import java.util.TimerTask;
 public class PlayerScreen extends AppCompatActivity {
 
     Button pauseButton;
+    TextView songName;
+    SeekBar durationBar;
+    TextView endingTime;
+    TextView currentTime;
+    int positionofSong;
+    String pathofSong;
+    String nameofSong;
     int flag=1; //IT MEANS SONG IS RUNNING
     public void pauseAndStart(View view){
         //IF FLAG ==1 IT MEANS WE WANT TO PAUSE THE SONG NOW
@@ -41,14 +48,41 @@ public class PlayerScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_screen);
 
-        TextView songName = (TextView) findViewById(R.id.songName);
-        SeekBar durationBar = (SeekBar) findViewById(R.id.songBar);
+        songName = (TextView) findViewById(R.id.songName);
+        durationBar = (SeekBar) findViewById(R.id.songBar);
+        currentTime=findViewById(R.id.currentTime);
+        endingTime=findViewById(R.id.endingTime);
         pauseButton=findViewById(R.id.pausebutton);
         songName.setSelected(true);
-        String pathofSong = getIntent().getStringExtra("Path");
-        String nameofSong = getIntent().getStringExtra("NameofSong");
-        songName.setText(nameofSong);
+        currentTime.setText("0:00");
+        //IT WILL LOAD UP INFO REGARDING THE SONG IN RESP. VARIABLES
+        boolean statusofSong=getIntent().getBooleanExtra("Status",false);
+        if(statusofSong){
+            songDetails();
+            setDurationBar();
+            MediaPlayerChecker.mediaPlayer.start();
+        }
+        else{
+            songDetails();
 
+            //IT WILL SET THE MEDIA PLAYER WITH PARTICULAR SONG ATTRIBUTES
+            setUpMediaPlayer();
+
+
+            setDurationBar();
+
+
+            MediaPlayerChecker.mediaPlayer.start();
+            MediaPlayerChecker.mediaPlayer.setLooping(true);
+        }
+    }
+    public void songDetails(){
+        pathofSong = getIntent().getStringExtra("Path");
+        nameofSong = getIntent().getStringExtra("NameofSong");
+        positionofSong=getIntent().getIntExtra("position",0);
+        songName.setText(nameofSong);
+    }
+    public void setUpMediaPlayer(){
         if (MediaPlayerChecker.mediaPlayer != null) {
             MediaPlayerChecker.mediaPlayer.reset();
         }
@@ -71,9 +105,16 @@ public class PlayerScreen extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        TextView currentTime=findViewById(R.id.currentTime);
-        TextView endingTime=findViewById(R.id.endingTime);
-        currentTime.setText("0:00");
+        MediaPlayerChecker.mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+
+            }
+
+        });
+    }
+    public void setDurationBar(){
         String endT=String.valueOf(((MediaPlayerChecker.mediaPlayer.getDuration()/1000)/60));
         if((MediaPlayerChecker.mediaPlayer.getDuration()/1000)%60<10){
             endT+=":0"+(MediaPlayerChecker.mediaPlayer.getDuration()/1000)%60;
@@ -85,9 +126,9 @@ public class PlayerScreen extends AppCompatActivity {
             @Override
             public void run() {
 
-                        durationBar.setProgress(MediaPlayerChecker.mediaPlayer.getCurrentPosition());
+                durationBar.setProgress(MediaPlayerChecker.mediaPlayer.getCurrentPosition());
 
-                }
+            }
 
         }, 0, 1000);
 
@@ -95,7 +136,7 @@ public class PlayerScreen extends AppCompatActivity {
         durationBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                setTime(progress,currentTime);
             }
 
             @Override
@@ -111,11 +152,6 @@ public class PlayerScreen extends AppCompatActivity {
                 }
             }
         });
-        MediaPlayerChecker.mediaPlayer.start();
-        MediaPlayerChecker.mediaPlayer.setLooping(true);
-
-
-
     }
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -131,5 +167,14 @@ public class PlayerScreen extends AppCompatActivity {
                 getApplication().setTheme(android.R.style.Theme_Black);
                 break;
         }
+    }
+    // THIS METHOD WILL SET CURRENT TIME POSITION OF MEDIAPLAYER IN LEFT TEXTVIEW OF TIME DURATIONS
+    public void setTime(int time, TextView textView){
+        String curT=String.valueOf(((time/1000)/60));
+        if((time/1000)%60<10){
+            curT+=":0"+(time/1000)%60;
+        }
+        else curT+=":"+(time/1000)%60;
+        textView.setText(curT);
     }
 }

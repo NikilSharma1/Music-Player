@@ -13,17 +13,23 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -34,7 +40,7 @@ public class Activity2 extends AppCompatActivity {
     private static final int PERMISSION_REQUEST = 1;
     ListView listView;
 
-    ArrayList<Song> songList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,21 +66,45 @@ public class Activity2 extends AppCompatActivity {
     }
     private void upload() {
         listView = findViewById(R.id.musicview);
-        songList = new ArrayList<>();
+
         getAudio();
-        MusicAdapter adapter = new MusicAdapter(this, songList);
+        MusicAdapter adapter = new MusicAdapter(this, MediaPlayerChecker.songList);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(Activity2.this, PlayerScreen.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                intent.putExtra("Path",String.valueOf(songList.get(position).getMpath()));
-                intent.putExtra("NameofSong",String.valueOf(songList.get(position).getMnameofSong()));
-                startActivity(intent);
 
+                if(MediaPlayerChecker.Pos!=position){
+                    MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).mstateofSong = false;
+                    MediaPlayerChecker.songList.get(position).mstateofSong = true;
+                    MediaPlayerChecker.Pos = position;
+                    Intent intent = new Intent(Activity2.this, PlayerScreen.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.putExtra("Path",String.valueOf(MediaPlayerChecker.songList.get(position).getMpath()));
+                    intent.putExtra("NameofSong",String.valueOf(MediaPlayerChecker.songList.get(position).getMnameofSong()));
+                    intent.putExtra("Position",position);
+                    intent.putExtra("Status",false);
+                    startActivity(intent);
+                }
+                else{
+                    if(MediaPlayerChecker.mediaPlayer.isPlaying()){
+                        MediaPlayerChecker.mediaPlayer.pause();
+                    }else {
+                        MediaPlayerChecker.mediaPlayer.start();
+                        Intent intent = new Intent(Activity2.this, PlayerScreen.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        intent.putExtra("Path",String.valueOf(MediaPlayerChecker.songList.get(position).getMpath()));
+                        intent.putExtra("NameofSong",String.valueOf(MediaPlayerChecker.songList.get(position).getMnameofSong()));
+                        intent.putExtra("Position",position);
+                        intent.putExtra("Status",true); // it means same song is played again
+                        startActivity(intent);
+                    }
+                    //adapter.notifyDataSetChanged();
+                }
+
+                adapter.notifyDataSetChanged();
             }
         });
     }
@@ -98,7 +128,7 @@ public class Activity2 extends AppCompatActivity {
                     Uri artUri = Uri
                             .parse("content://media/external/audio/albumart");
                     Uri albumArtUri = ContentUris.withAppendedId(artUri, album_id);
-                    songList.add(new Song(song,artist,path));
+                    MediaPlayerChecker.songList.add(new Song(song,artist,path,false));
 
                    i++;
                 } while (cur.moveToNext());

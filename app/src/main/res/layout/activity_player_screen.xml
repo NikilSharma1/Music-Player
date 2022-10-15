@@ -20,18 +20,18 @@
 
     <Button
         android:id="@+id/pausebutton"
-        android:layout_width="97dp"
-        android:layout_height="71dp"
+        android:layout_width="62dp"
+        android:layout_height="51dp"
         android:layout_marginStart="134dp"
         android:layout_marginEnd="134dp"
         android:layout_marginBottom="88dp"
         android:background="@android:drawable/ic_media_pause"
-        android:backgroundTint="@color/material_dynamic_neutral95"
+        android:backgroundTint="#FFC0CB"
         android:foregroundGravity="center"
         android:onClick="pauseAndStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.717"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="SpeakableTextPresentCheck" />
 
@@ -91,5 +91,29 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/songBar" />
+
+    <Button
+        android:id="@+id/previous"
+        android:layout_width="62dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="92dp"
+        android:background="@android:drawable/ic_media_previous"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/pausebutton"
+        app:layout_constraintStart_toEndOf="@+id/currentTime" />
+
+    <Button
+        android:id="@+id/next"
+        android:layout_width="62dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginEnd="74dp"
+        android:layout_marginBottom="92dp"
+        android:background="@android:drawable/ic_media_next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/pausebutton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
