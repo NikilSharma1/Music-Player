@@ -56,6 +56,14 @@ public class PlayerScreen extends AppCompatActivity {
         songDetailsfornextSong();
         newSongisPlayed();
     }
+    public void prevSong(View view){
+        MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).mstateofSong = false;
+        MediaPlayerChecker.Pos-=1;
+        MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).mstateofSong =true;
+        MediaPlayerChecker.adapter.notifyDataSetChanged();
+        songDetailsfornextSong();
+        newSongisPlayed();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
