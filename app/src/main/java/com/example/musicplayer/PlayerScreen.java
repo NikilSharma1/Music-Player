@@ -4,17 +4,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,6 +34,7 @@ public class PlayerScreen extends AppCompatActivity {
     int positionofSong;
     String pathofSong;
     String nameofSong;
+    ImageView imageView;
     int flag=1; //IT MEANS SONG IS RUNNING
     public void pauseAndStart(View view){
         //IF FLAG ==1 IT MEANS WE WANT TO PAUSE THE SONG NOW
@@ -46,11 +52,19 @@ public class PlayerScreen extends AppCompatActivity {
     public void songDetailsfornextSong(){
         pathofSong = MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).getMpath();
         nameofSong = MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).getMnameofSong();
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(new File(pathofSong).getPath());
+        byte [] data = mmr.getEmbeddedPicture();
+        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+        //if(bitmap!=null)
+        imageView.setImageBitmap(bitmap);
         songName.setText(nameofSong);
     }
     public void nextSong(View view){
         MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).mstateofSong = false;
+        if(MediaPlayerChecker.Pos!=MediaPlayerChecker.songList.size())
         MediaPlayerChecker.Pos+=1;
+        else MediaPlayerChecker.Pos=0;
         MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).mstateofSong =true;
         MediaPlayerChecker.adapter.notifyDataSetChanged();
         songDetailsfornextSong();
@@ -58,7 +72,9 @@ public class PlayerScreen extends AppCompatActivity {
     }
     public void prevSong(View view){
         MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).mstateofSong = false;
-        MediaPlayerChecker.Pos-=1;
+        if(MediaPlayerChecker.Pos!=0)
+            MediaPlayerChecker.Pos-=1;
+        else MediaPlayerChecker.Pos=MediaPlayerChecker.songList.size()-1;
         MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).mstateofSong =true;
         MediaPlayerChecker.adapter.notifyDataSetChanged();
         songDetailsfornextSong();
@@ -74,6 +90,7 @@ public class PlayerScreen extends AppCompatActivity {
         currentTime=findViewById(R.id.currentTime);
         endingTime=findViewById(R.id.endingTime);
         pauseButton=findViewById(R.id.pausebutton);
+        imageView=findViewById(R.id.imageView2);
         songName.setSelected(true);
         currentTime.setText("0:00");
         //IT WILL LOAD UP INFO REGARDING THE SONG IN RESP. VARIABLES
@@ -103,6 +120,12 @@ public class PlayerScreen extends AppCompatActivity {
         pathofSong = getIntent().getStringExtra("Path");
         nameofSong = getIntent().getStringExtra("NameofSong");
         positionofSong=getIntent().getIntExtra("position",0);
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(new File(pathofSong).getPath());
+        byte [] data = mmr.getEmbeddedPicture();
+        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+        //if(bitmap!=null)
+        imageView.setImageBitmap(bitmap);
         songName.setText(nameofSong);
     }
     public void setUpMediaPlayer(){
