@@ -12,6 +12,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -55,20 +56,26 @@ public class PlayerScreen extends AppCompatActivity {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(new File(pathofSong).getPath());
         byte [] data = mmr.getEmbeddedPicture();
+        if(data!=null){
         Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
         //if(bitmap!=null)
-        imageView.setImageBitmap(bitmap);
+        imageView.setImageBitmap(bitmap);}
         songName.setText(nameofSong);
     }
     public void nextSong(View view){
         MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).mstateofSong = false;
+        //Toast.makeText(this, String.valueOf(MediaPlayerChecker.songList.size()), Toast.LENGTH_SHORT).show();
         if(MediaPlayerChecker.Pos!=MediaPlayerChecker.songList.size())
         MediaPlayerChecker.Pos+=1;
         else MediaPlayerChecker.Pos=0;
         MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).mstateofSong =true;
         MediaPlayerChecker.adapter.notifyDataSetChanged();
         songDetailsfornextSong();
+
         newSongisPlayed();
+
+
+        //Toast.makeText(this, "tik", Toast.LENGTH_SHORT).show();
     }
     public void prevSong(View view){
         MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).mstateofSong = false;
@@ -96,9 +103,11 @@ public class PlayerScreen extends AppCompatActivity {
         //IT WILL LOAD UP INFO REGARDING THE SONG IN RESP. VARIABLES
         boolean statusofSong=getIntent().getBooleanExtra("Status",false);
         if(statusofSong){
+            //Toast.makeText(this, "NO", Toast.LENGTH_SHORT).show();
            SongIsAlreadyPlaying();
         }
         else{
+            //Toast.makeText(this, "YES", Toast.LENGTH_SHORT).show();
             songDetails();
             newSongisPlayed();
         }
@@ -123,9 +132,12 @@ public class PlayerScreen extends AppCompatActivity {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(new File(pathofSong).getPath());
         byte [] data = mmr.getEmbeddedPicture();
-        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+        Bitmap bitmap;
+        if(data!=null)
+        {bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+
         //if(bitmap!=null)
-        imageView.setImageBitmap(bitmap);
+        imageView.setImageBitmap(bitmap);}
         songName.setText(nameofSong);
     }
     public void setUpMediaPlayer(){

@@ -39,13 +39,15 @@ import java.util.ArrayList;
 public class Activity2 extends AppCompatActivity {
     private static final int PERMISSION_REQUEST = 1;
     ListView listView;
-
+    boolean songsStarted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_2);
         Toolbar toolbar=findViewById(R.id.toobar);
+        songsStarted=false;
+        listView = findViewById(R.id.musicview);
         setSupportActionBar(toolbar);
         if(ContextCompat.checkSelfPermission(Activity2.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -65,8 +67,6 @@ public class Activity2 extends AppCompatActivity {
         }
     }
     private void upload() {
-        listView = findViewById(R.id.musicview);
-
         getAudio();
         MediaPlayerChecker.adapter = new MusicAdapter(this, MediaPlayerChecker.songList);
         listView.setAdapter(MediaPlayerChecker.adapter);
@@ -76,7 +76,8 @@ public class Activity2 extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if(MediaPlayerChecker.Pos!=position){
+                if(MediaPlayerChecker.Pos!=position || songsStarted==false){
+                    songsStarted=true;
                     MediaPlayerChecker.songList.get(MediaPlayerChecker.Pos).mstateofSong = false;
                     MediaPlayerChecker.songList.get(position).mstateofSong = true;
                     MediaPlayerChecker.Pos = position;
@@ -89,6 +90,7 @@ public class Activity2 extends AppCompatActivity {
                     startActivity(intent);
                 }
                 else{
+                    //Toast.makeText(Activity2.this, "djdd", Toast.LENGTH_SHORT).show();
                     if(MediaPlayerChecker.mediaPlayer.isPlaying()){
                         MediaPlayerChecker.mediaPlayer.pause();
                     }else {
